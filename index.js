@@ -20,5 +20,7 @@ var staticSetting = {
     }
 };
 
-app.use(express.static(staticFolder, staticSetting));
-app.use('/locales', express.static(__dirname + '/locales', staticSetting));
+module.exports = function(app){
+  app.use(express.static(staticFolder, staticSetting));
+  app.use('/locales', express.static(__dirname + '/locales', staticSetting));
+};
