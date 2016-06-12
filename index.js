@@ -1,17 +1,6 @@
 var express = require('express');
 var fs = require('fs');
 
-var staticFolder = __dirname + '/public';
-
-try{
-  var stats = fs.lstatSync(__dirname + '/dist');
-  if(stats.isDirectory()){
-    staticFolder = __dirname + '/dist';
-  }
-} catch (ex){
-  console.error(ex);
-}
-
 var staticSetting = {
     etag: true,
     lastModified: true,
@@ -21,7 +10,18 @@ var staticSetting = {
     }
 };
 
-module.exports = function(app){
+module.exports = function(app, dirname){
+  var staticFolder = dirname + '/public';
+  
+  try{
+    var stats = fs.lstatSync(dirname + '/dist');
+    if(stats.isDirectory()){
+      staticFolder = dirname + '/dist';
+    }
+  } catch (ex){
+    console.error(ex);
+  }
+
   app.use(express.static(staticFolder, staticSetting));
-  app.use('/locales', express.static(__dirname + '/locales', staticSetting));
+  app.use('/locales', express.static(dirname + '/locales', staticSetting));
 };
